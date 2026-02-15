@@ -1,24 +1,45 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:sudoku_api/sudoku_api.dart';
+import 'package:sudoku_starter/end_screen.dart';
 import 'package:sudoku_starter/game.dart';
+import 'package:sudoku_starter/home_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
-  Puzzle puzzle =  Puzzle(PuzzleOptions());
-  await puzzle.generate();
-  runApp(MyApp(puzzle: puzzle));
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key, required this.puzzle});
+  const MyApp({super.key});
 
-  final Puzzle puzzle;
+  static final GoRouter _router = GoRouter(
+    routes: [
+      GoRoute(
+        path: '/',
+        builder: (context, state) => const HomeScreen(),
+      ),
+      GoRoute(
+        path: '/game',
+        builder: (context, state) {
+          final puzzle = state.extra as Puzzle?;
+          if (puzzle == null) {
+            return const HomeScreen();
+          }
+          return Game(title: 'Sudoku game', puzzle: puzzle);
+        },
+      ),
+      GoRoute(
+        path: '/end',
+        builder: (context, state) => const EndScreen(),
+      ),
+    ],
+  );
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
       title: 'Flutter Demo',
       theme: ThemeData(
         // This is the theme of your application.
@@ -32,7 +53,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: Game(title: 'Flutter Demo Home Page', puzzle: puzzle),
+      routerConfig: _router,
     );
   }
 }

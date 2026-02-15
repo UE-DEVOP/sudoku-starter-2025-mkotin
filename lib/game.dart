@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
+import 'package:go_router/go_router.dart';
 import 'package:sudoku_api/sudoku_api.dart';
 import 'package:sudoku_starter/sub_grid.dart';
 
@@ -68,6 +69,28 @@ class _GameState extends State<Game> {
           .cellAt(Position(row: row, column: col))
           .setValue(value);
     });
+
+    if (_isSolved()) {
+      context.go('/end');
+    }
+  }
+
+  bool _isSolved() {
+    final board = widget.puzzle.board()?.matrix();
+    final solved = widget.puzzle.solvedBoard()?.matrix();
+    if (board == null || solved == null) {
+      return false;
+    }
+
+    for (var r = 0; r < board.length; r++) {
+      for (var c = 0; c < board[r].length; c++) {
+        if (board[r][c].getValue() != solved[r][c].getValue()) {
+          return false;
+        }
+      }
+    }
+
+    return true;
   }
 
   void _showInvalidValue() {
