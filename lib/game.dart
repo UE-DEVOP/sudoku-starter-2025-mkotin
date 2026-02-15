@@ -23,6 +23,8 @@ class Game extends StatefulWidget {
 
 class _GameState extends State<Game> {
   int _counter = 0;
+  int? _selectedSubgrid;
+  int? _selectedCell;
 
   
   
@@ -81,7 +83,16 @@ class _GameState extends State<Game> {
                     width: boxSize,
                     height: boxSize,
                     decoration: BoxDecoration(border: Border.all(color: Colors.blueAccent)),
-                    child: Subgrid(subBoard: widget.puzzle.board()?.matrix()?[x]),
+                    child: Subgrid(
+                      subBoard: widget.puzzle.board()?.matrix()?[x],
+                      selectedIndex: _selectedSubgrid == x ? _selectedCell : null,
+                      onCellTap: (y) {
+                        setState(() {
+                          _selectedSubgrid = x;
+                          _selectedCell = y;
+                        });
+                      },
+                    ),
                   );
                 })
               )
