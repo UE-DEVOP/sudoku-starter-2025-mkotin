@@ -40,12 +40,46 @@ class _GameState extends State<Game> {
     });
   }
 
+  void _setSelectedCellValue(int value) {
+    if (_selectedSubgrid == null || _selectedCell == null) {
+      return;
+    }
+
+    final  row =  _selectedSubgrid;
+    final col = _selectedCell;
+
+    setState(() {
+      widget.puzzle
+          .board()!
+          .cellAt(Position(row: row!, column: col!))
+          .setValue(value);
+    });
+  }
+
+  Widget _buildButtonRow(List<int> values, bool hasSelection) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        for (final value in values)
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 4),
+            child: ElevatedButton(
+              onPressed:
+                  hasSelection ? () => _setSelectedCellValue(value) : null,
+              child: Text(value.toString()),
+            ),
+          ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height / 2;
     var width = MediaQuery.of(context).size.width;
     var maxSize = height > width ? width : height;
     var boxSize = (maxSize / 3).ceil().toDouble();
+    final hasSelection = _selectedSubgrid != null && _selectedCell != null;
 
     return Scaffold(
       appBar: AppBar(
@@ -96,7 +130,11 @@ class _GameState extends State<Game> {
                   );
                 })
               )
-            )
+            ),
+            const SizedBox(height: 16),
+            _buildButtonRow([1, 2, 3, 4, 5], hasSelection),
+            const SizedBox(height: 8),
+            _buildButtonRow([6, 7, 8, 9], hasSelection),
           ],
         ),
       )
