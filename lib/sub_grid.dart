@@ -5,10 +5,12 @@ class Subgrid extends StatelessWidget {
   const Subgrid({
     super.key,
     required this.subBoard,
+    required this.solvedSubBoard,
     this.selectedIndex,
     this.onCellTap,
   });
   final List<Cell>? subBoard;
+  final List<Cell>? solvedSubBoard;
   final int? selectedIndex;
   final ValueChanged<int>? onCellTap;
   @override
@@ -17,6 +19,9 @@ class Subgrid extends StatelessWidget {
       crossAxisCount: 3,
       children: List.generate(9, (y) {
         final cellValue = subBoard?[y].getValue();
+        final solvedValue = solvedSubBoard?[y].getValue();
+        final isEmpty = cellValue == null || cellValue == 0;
+        final displayValue = isEmpty ? solvedValue : cellValue;
         final isSelected = selectedIndex == y;
         return Material(
           type: MaterialType.transparency,
@@ -33,8 +38,11 @@ class Subgrid extends StatelessWidget {
               ),
               child: Center(
                 child: Text(
-                  cellValue == null || cellValue == 0 ? '' : cellValue.toString(),
-                  style: const TextStyle(fontSize: 24),
+                  displayValue == null ? '' : displayValue.toString(),
+                  style: TextStyle(
+                    fontSize: 24,
+                    color: isEmpty ? Colors.black12 : Colors.black,
+                  ),
                 ),
               ),
             ),

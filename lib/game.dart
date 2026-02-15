@@ -119,6 +119,7 @@ class _GameState extends State<Game> {
                     decoration: BoxDecoration(border: Border.all(color: Colors.blueAccent)),
                     child: Subgrid(
                       subBoard: widget.puzzle.board()?.matrix()?[x],
+                      solvedSubBoard: widget.puzzle.solvedBoard()?.matrix()?[x],
                       selectedIndex: _selectedSubgrid == x ? _selectedCell : null,
                       onCellTap: (y) {
                         setState(() {
