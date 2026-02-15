@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:sudoku_api/sudoku_api.dart';
 import 'package:sudoku_starter/sub_grid.dart';
 
@@ -45,15 +46,45 @@ class _GameState extends State<Game> {
       return;
     }
 
-    final  row =  _selectedSubgrid;
-    final col = _selectedCell;
+    final row = _selectedSubgrid!;
+    final col = _selectedCell!;
+    final solvedValue = widget.puzzle
+        .solvedBoard()
+        ?.matrix()?[row][col]
+        .getValue();
+
+    if (solvedValue == null) {
+      return;
+    }
+
+    if (value != solvedValue) {
+      _showInvalidValue();
+      return;
+    }
 
     setState(() {
       widget.puzzle
           .board()!
-          .cellAt(Position(row: row!, column: col!))
+          .cellAt(Position(row: row, column: col))
           .setValue(value);
     });
+  }
+
+  void _showInvalidValue() {
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(
+        const SnackBar(
+          elevation: 0,
+          backgroundColor: Colors.transparent,
+          behavior: SnackBarBehavior.floating,
+          content: AwesomeSnackbarContent(
+            title: 'Erreur',
+            message: 'La valeur saisie n\'est pas correcte.',
+            contentType: ContentType.failure,
+          ),
+        ),
+      );
   }
 
   Widget _buildButtonRow(List<int> values, bool hasSelection) {
