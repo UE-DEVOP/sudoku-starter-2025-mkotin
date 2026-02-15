@@ -1,12 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:sudoku_api/sudoku_api.dart';
 import 'package:sudoku_starter/game.dart';
 
-void main() {
-  runApp(const MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  Puzzle puzzle =  Puzzle(PuzzleOptions());
+  await puzzle.generate();
+  runApp(MyApp(puzzle: puzzle));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({super.key, required this.puzzle});
+
+  final Puzzle puzzle;
 
   // This widget is the root of your application.
   @override
@@ -25,7 +32,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: const Game(title: 'Flutter Demo Home Page'),
+      home: Game(title: 'Flutter Demo Home Page', puzzle: puzzle),
     );
   }
 }

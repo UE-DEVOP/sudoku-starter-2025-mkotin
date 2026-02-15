@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:sudoku_api/sudoku_api.dart';
 import 'package:sudoku_starter/sub_grid.dart';
 
 class Game extends StatefulWidget {
-  const Game({Key? key, required this.title}) : super(key: key);
+  const Game({Key? key, required this.title, required this.puzzle}) : super(key: key);
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -14,6 +15,7 @@ class Game extends StatefulWidget {
   // always marked "final".
 
   final String title;
+  final Puzzle puzzle;
 
   @override
   State<Game> createState() => _GameState();
@@ -21,6 +23,9 @@ class Game extends StatefulWidget {
 
 class _GameState extends State<Game> {
   int _counter = 0;
+
+  
+  
 
   void _incrementCounter() {
     setState(() {
@@ -76,7 +81,7 @@ class _GameState extends State<Game> {
                     width: boxSize,
                     height: boxSize,
                     decoration: BoxDecoration(border: Border.all(color: Colors.blueAccent)),
-                    child: const Subgrid(),
+                    child: Subgrid(subBoard: widget.puzzle.board()?.matrix()?[x]),
                   );
                 })
               )
